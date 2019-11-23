@@ -5,7 +5,7 @@ import { easeOutQuad, easeInOutQuad, easeOutSine, easeInOutSine } from './utils/
 export default class CanvasTexture {
     constructor() {
         this.maxAge = 120;
-        this.radius = 50;
+        this.radius = 300;
         this.trail = [];
 
         this.initTexture();

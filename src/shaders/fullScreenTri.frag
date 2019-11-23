@@ -1,18 +1,21 @@
 precision highp float;
 uniform sampler2D uScene;
+uniform sampler2D uTextImage;
 uniform vec2 uResolution;
 uniform float uTime;
 
 void main() {
     vec2 uv = gl_FragCoord.xy / uResolution.xy;
     vec4 color = texture2D(uScene, uv);
+    vec4 textImageColor = texture2D(uTextImage, uv);
 
-    // wavy line
-    // float x = uv.x;
-    // float m = sin(x * 8.0 + uTime) * 0.3;
-    // uv.y -= m;
-    // float line = smoothstep(0.4, 0.5, uv.y) * smoothstep(0.6, 0.5, uv.y);
-    // color = mix(color, vec4(1.0), line);
+
+    vec4 refractColor1 = texture2D(uTextImage, uv + (color.r * 0.009 * sin(uTime) * 2.0));
+    vec4 refractColor2 = texture2D(uTextImage, uv + (color.r * 0.013 * sin(uTime) * 2.0));
+    vec4 refractColor3 = texture2D(uTextImage, uv + (color.r * 0.017 * sin(uTime) * 2.0));
+
+    color = vec4(refractColor1.r, refractColor2.g, refractColor3.b, 1.0);
+
     
     gl_FragColor = vec4(color);
 }

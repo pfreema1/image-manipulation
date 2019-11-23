@@ -35,9 +35,21 @@ export default class WebGLView {
 		this.initLights();
 		this.initTweakPane();
 		await this.loadTextMesh();
+		await this.loadTextImage();
 		this.initMouseMoveListen();
 		this.initCanvasTexture();
 		this.initRenderTri();
+	}
+
+	loadTextImage() {
+		return new Promise((res, rej) => {
+			let textureLoader = new THREE.TextureLoader();
+
+			textureLoader.load('./text-image.png', (texture) => {
+				this.textImageTexture = texture;
+				res();
+			});
+		});
 	}
 
 	initMouseMoveListen() {
@@ -134,6 +146,10 @@ export default class WebGLView {
 				uScene: {
 					type: 't',
 					value: this.canvasTexture.texture//this.bgRenderTarget.texture
+				},
+				uTextImage: {
+					type: 't',
+					value: this.textImageTexture
 				},
 				uResolution: { value: resolution },
 				uTime: {
