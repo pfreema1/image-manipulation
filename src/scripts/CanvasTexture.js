@@ -7,22 +7,16 @@ export default class CanvasTexture {
         this.maxAge = 120;
         this.radius = 300;
         this.trail = [];
+        this.spots = [];
+
+        this.numSpots = 30;
 
         this.initTexture();
+        this.initSpots();
     }
 
     initTexture() {
         this.canvas = document.createElement('canvas');
-        //
-        // this.canvas.style.position = 'absolute';
-        // this.canvas.style.top = 0;
-        // this.canvas.style.left = 0;
-        // this.canvas.style.zIndex = 9999999;
-        // document.body.appendChild(this.canvas);
-        // this.canvas.width = window.innerWidth;
-        // this.canvas.height = window.innerHeight;
-        //
-
         this.canvas.width = this.width = window.innerWidth;
         this.canvas.height = this.height = window.innerHeight;
         this.ctx = this.canvas.getContext('2d');
@@ -33,6 +27,22 @@ export default class CanvasTexture {
 
         this.canvas.id = 'canvasTexture';
         this.canvas.style.width = this.canvas.style.height = `${this.canvas.width}px`;
+    }
+
+    initSpots() {
+        for (let i = 0; i < this.numSpots; i++) {
+            let spot = {
+                x: Math.random() * this.width,
+                y: Math.random() * this.height,
+                radius: Math.random() * 300 + 50
+            };
+
+            spot.gradient = this.ctx.createRadialGradient(spot.x, spot.y, spot.radius * 0.25, spot.x, spot.y, spot.radius);
+            spot.gradient.addColorStop(0, 'rgba(255, 255, 255, 0.5');
+            spot.gradient.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+
+            this.spots.push(spot);
+        }
     }
 
     update(delta) {
@@ -48,6 +58,8 @@ export default class CanvasTexture {
         });
 
         this.drawBorder();
+
+        this.drawSpots();
 
         this.trail.forEach((point, i) => {
             this.drawTouch(point);
@@ -101,6 +113,16 @@ export default class CanvasTexture {
         this.ctx.fillStyle = grd;
         this.ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
         this.ctx.fill();
+    }
+
+    drawSpots() {
+        for (let i = 0; i < this.numSpots; i++) {
+            let spot = this.spots[i];
+            this.ctx.beginPath();
+            this.ctx.fillStyle = spot.gradient;
+            this.ctx.arc(spot.x, spot.y, spot.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     drawBorder() {
