@@ -10,9 +10,9 @@ void main() {
     vec4 textImageColor = texture2D(uTextImage, uv);
 
 
-    vec4 refractColor1 = texture2D(uTextImage, uv + (color.r * 0.009 * sin(uTime) * 2.0));
-    vec4 refractColor2 = texture2D(uTextImage, uv + (color.r * 0.013 * sin(uTime) * 2.0));
-    vec4 refractColor3 = texture2D(uTextImage, uv + (color.r * 0.017 * sin(uTime) * 2.0));
+    vec4 refractColor1 = texture2D(uTextImage, uv + (color.r * 0.009 * sin(uTime * 0.5) * 1.3));
+    vec4 refractColor2 = texture2D(uTextImage, uv + (color.r * 0.013 * sin(uTime * 0.5) * 1.3));
+    vec4 refractColor3 = texture2D(uTextImage, uv + (color.r * 0.017 * sin(uTime * 0.5) * 1.3));
 
     color = vec4(refractColor1.r, refractColor2.g, refractColor3.b, 1.0);
 

@@ -23,8 +23,8 @@ export default class CanvasTexture {
         // this.canvas.height = window.innerHeight;
         //
 
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        this.canvas.width = this.width = window.innerWidth;
+        this.canvas.height = this.height = window.innerHeight;
         this.ctx = this.canvas.getContext('2d');
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -47,6 +47,8 @@ export default class CanvasTexture {
             }
         });
 
+        this.drawBorder();
+
         this.trail.forEach((point, i) => {
             this.drawTouch(point);
         });
@@ -56,7 +58,7 @@ export default class CanvasTexture {
     }
 
     clear() {
-        this.ctx.fillStyle = 'black';
+        this.ctx.fillStyle = 'white';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -99,5 +101,15 @@ export default class CanvasTexture {
         this.ctx.fillStyle = grd;
         this.ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
         this.ctx.fill();
+    }
+
+    drawBorder() {
+        const grd = this.ctx.createRadialGradient(this.width / 2, this.height / 2, this.height * 0.5, this.width / 2, this.height / 2, this.height * 0.9);
+
+        grd.addColorStop(0, 'black');
+        grd.addColorStop(1, 'white');
+
+        this.ctx.fillStyle = grd;
+        this.ctx.fillRect(0, 0, this.width, this.height);
     }
 }
