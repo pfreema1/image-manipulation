@@ -31,10 +31,10 @@ export default class WebGLView {
 	async init() {
 		this.initThree();
 		this.initBgScene();
-		this.initObject();
-		this.initLights();
-		this.initTweakPane();
-		await this.loadTextMesh();
+		// this.initObject();
+		// this.initLights();
+		// this.initTweakPane();
+		// await this.loadTextMesh();
 		await this.loadTextImage();
 		this.initMouseMoveListen();
 		this.initCanvasTexture();
