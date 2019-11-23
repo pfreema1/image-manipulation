@@ -6,6 +6,7 @@ import fullScreenTriFrag from '../../shaders/fullScreenTri.frag';
 import fullScreenTriVert from '../../shaders/fullScreenTri.vert';
 import OrbitControls from 'three-orbitcontrols';
 import TweenMax from 'TweenMax';
+import CanvasTexture from '../CanvasTexture';
 
 function remap(t, old_min, old_max, new_min, new_max) {
 	let old_range = old_max - old_min;
@@ -34,7 +35,26 @@ export default class WebGLView {
 		this.initLights();
 		this.initTweakPane();
 		await this.loadTextMesh();
+		this.initMouseMoveListen();
+		this.initCanvasTexture();
 		this.initRenderTri();
+	}
+
+	initMouseMoveListen() {
+		this.mouse = new THREE.Vector2();
+		this.width = window.innerWidth;
+		this.height = window.innerHeight;
+
+		window.addEventListener('mousemove', ({ clientX, clientY }) => {
+			this.mouse.x = clientX; //(clientX / this.width) * 2 - 1;
+			this.mouse.y = clientY; //-(clientY / this.height) * 2 + 1;
+
+			this.canvasTexture.addTouch(this.mouse);
+		});
+	}
+
+	initCanvasTexture() {
+		this.canvasTexture = new CanvasTexture();
 	}
 
 	initTweakPane() {
@@ -113,7 +133,7 @@ export default class WebGLView {
 			uniforms: {
 				uScene: {
 					type: 't',
-					value: this.bgRenderTarget.texture
+					value: this.canvasTexture.texture//this.bgRenderTarget.texture
 				},
 				uResolution: { value: resolution },
 				uTime: {
@@ -121,8 +141,6 @@ export default class WebGLView {
 				}
 			}
 		});
-
-		console.log(this.bgRenderTarget.texture);
 
 		let renderTri = new THREE.Mesh(geometry, this.triMaterial);
 		renderTri.frustumCulled = false;
@@ -208,6 +226,10 @@ export default class WebGLView {
 
 		if (this.textMesh) {
 			this.updateTextMesh();
+		}
+
+		if (this.canvasTexture) {
+			this.canvasTexture.update();
 		}
 
 		if (this.trackball) this.trackball.update();
